@@ -1,0 +1,24 @@
+{
+  "name": "leaflet.tilelayer.glcolorscale",
+  "version": "1.0.0",
+  "description": "Custom Leaflet TileLayer using WebGL to colorize pixels according to a specified color scale",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Schneider <davschne@gmail.com>",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale.git"
+  },
+  "keywords": [
+    "leaflet",
+    "raster",
+    "plugin",
+    "mapping",
+    "webgl",
+    "colorization",
+    "animation"
+  ]
+}
