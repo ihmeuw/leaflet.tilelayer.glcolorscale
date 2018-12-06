@@ -30,5 +30,5 @@ void main() {
   if (isCloseEnough(pixelFloatValue, nodataValue)) {
     discard;
   }
-  gl_FragColor = computeColor(pixelFloatValue, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength);
+  gl_FragColor = computeColor(pixelFloatValue, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
 }

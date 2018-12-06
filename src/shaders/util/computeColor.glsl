@@ -10,8 +10,8 @@
 vec4 computeColor(
   float inputVal,
   ScaleStop colorScale[SCALE_MAX_LENGTH],
-  int colorScaleLength,
   ScaleStop sentinelValues[SENTINEL_MAX_LENGTH],
+  int colorScaleLength,
   int sentinelValuesLength
 ) {
   // First compare the value against any sentinel values.

@@ -47,14 +47,14 @@ void main() {
     if (isCloseEnough(pixelFloatValue, nodataValue)) {
       discard;
     }
-    gl_FragColor = computeColor(pixelFloatValue, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength);
+    gl_FragColor = computeColor(pixelFloatValue, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
   } else if (interpolationFraction >= 1.0) {
     vec4 rgbaFloats = texture2D(textureB, vTexCoordB);
     float pixelFloatValue = rgbaToFloat(rgbaFloats, littleEndian);
     if (isCloseEnough(pixelFloatValue, nodataValue)) {
       discard;
     }
-    gl_FragColor = computeColor(pixelFloatValue, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength);
+    gl_FragColor = computeColor(pixelFloatValue, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
   } else {
     vec4 rgbaFloatsA = texture2D(textureA, vTexCoordA);
     float pixelFloatValueA = rgbaToFloat(rgbaFloatsA, littleEndian);
@@ -73,17 +73,17 @@ void main() {
       vec4 colorA = (
         aIsNodata
         ? TRANSPARENT
-        : computeColor(pixelFloatValueA, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength)
+        : computeColor(pixelFloatValueA, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength)
       );
       vec4 colorB = (
         bIsNodata
         ? TRANSPARENT
-        : computeColor(pixelFloatValueB, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength)
+        : computeColor(pixelFloatValueB, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength)
       );
       gl_FragColor = mix(colorA, colorB, interpolationFraction);
     } else {
       float interpolated = mix(pixelFloatValueA, pixelFloatValueB, interpolationFraction);
-      gl_FragColor = computeColor(interpolated, colorScale, colorScaleLength, sentinelValues, sentinelValuesLength);
+      gl_FragColor = computeColor(interpolated, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
     }
   }
 }
