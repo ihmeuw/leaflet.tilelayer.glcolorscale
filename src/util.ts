@@ -45,7 +45,10 @@ export function colorStringToWebGLFloats(rgb: string): REGL.Vec4 {
  * evaluated when the drawing function is called. When each dynamic prop (function) is evaluated,
  * it's passed as second argument a `props` object (similar to `props` in a React component).
  */
-export function bindStructArray<Struct extends Dictionary<any>, Props extends {} = {}>(
+export function bindStructArray<
+  Struct extends Dictionary<any>,
+  Props extends Dictionary<any[]> = {}
+>(
   structPropertyNames: Array<keyof Struct>,
   defaultValue: Struct,
   maxArrayLength: number,
