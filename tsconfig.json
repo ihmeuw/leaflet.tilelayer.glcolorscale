@@ -2,9 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "declarationDir": "./",
-    "declarationMap": true,
-    "esModuleInterop": true,
+    "declarationDir": "./dist/types/",
     "lib": ["dom", "es2016"],
     "moduleResolution": "node",
     "noImplicitAny": true,
