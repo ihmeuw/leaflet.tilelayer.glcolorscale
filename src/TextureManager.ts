@@ -1,5 +1,7 @@
-import flatMap from 'lodash-es/flatMap';
-import isEmpty from 'lodash-es/isEmpty';
+import {
+  flatMap,
+  isEmpty,
+} from 'lodash-es';
 import REGL from 'regl';
 
 import {

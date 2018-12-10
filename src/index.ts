@@ -1,10 +1,12 @@
 import * as L from 'leaflet';
-import isUndefined from 'lodash-es/isUndefined';
-import mapValues from 'lodash-es/mapValues';
-import noop from 'lodash-es/noop';
-import pickBy from 'lodash-es/pickBy';
-import values from 'lodash-es/values';
-import zipWith from 'lodash-es/zipWith';
+import {
+  isUndefined,
+  mapValues,
+  noop,
+  pickBy,
+  values,
+  zipWith,
+} from 'lodash-es';
 
 import './index.css';
 

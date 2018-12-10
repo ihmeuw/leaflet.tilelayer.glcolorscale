@@ -1,7 +1,9 @@
 import * as L from 'leaflet';
-import chunk from 'lodash-es/chunk';
-import flatMap from 'lodash-es/flatMap';
-import zipWith from 'lodash-es/zipWith';
+import {
+  chunk,
+  flatMap,
+  zipWith,
+} from 'lodash-es';
 import REGL from 'regl';
 
 import { CLEAR_COLOR } from './constants';
