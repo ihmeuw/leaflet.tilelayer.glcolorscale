@@ -3,13 +3,12 @@ import { PNG } from 'pngjs';
 import REGL from 'regl';
 
 import {
+  Color,
   Dictionary,
   TextureBounds,
   TileCoordinates,
   WebGLColorStop,
 } from './types';
-
-import { Color } from './types';
 
 /**
  * Converts a color scale (or array of SentinelValues) to a format usable by WebGL.
