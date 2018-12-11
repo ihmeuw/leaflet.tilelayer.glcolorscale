@@ -136,7 +136,7 @@ export const defaultOptions = {
 
 export type InternalOptions = Options & typeof defaultOptions;
 
-export class GLTileLayerComponent extends L.GridLayer {
+export class TileLayerGLColorScale extends L.GridLayer {
   options: InternalOptions;
 
   protected _map: L.Map;
