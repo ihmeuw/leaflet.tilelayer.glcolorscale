@@ -133,8 +133,10 @@ export const DEFAULT_OPTIONS = {
   crossOrigin: false,
 };
 
+export type InternalOptions = Options & typeof DEFAULT_OPTIONS;
+
 export class GLTileLayerComponent extends L.GridLayer {
-  options: Options;
+  options: InternalOptions;
 
   protected _map: L.Map;
   protected _renderer: Renderer;
@@ -378,7 +380,7 @@ export class GLTileLayerComponent extends L.GridLayer {
         newTilesData,
         newColorScale,
         newSentinelValues,
-        transitionTimeMs as number,
+        transitionTimeMs,
         onFrameRendered,
       );
     } else {
@@ -389,7 +391,7 @@ export class GLTileLayerComponent extends L.GridLayer {
         newColorScale,
         oldSentinelValues,
         newSentinelValues,
-        transitionTimeMs as number,
+        transitionTimeMs,
         onFrameRendered,
       );
     }
@@ -501,7 +503,7 @@ export class GLTileLayerComponent extends L.GridLayer {
    * Copy pixels from the Renderer's (offscreen) <canvas> to a tile's (onscreen) canvas.
    */
   protected _copyToTileCanvas(tile: TileElement, sourceX: number, sourceY: number) {
-    const tileSize = this.options.tileSize as number;
+    const tileSize = this._tileSizeAsNumber();
     const tileCanvas2DContext = tile.getContext('2d');
     if (tileCanvas2DContext === null) {
       throw new Error('Tile canvas 2D context is null.');
