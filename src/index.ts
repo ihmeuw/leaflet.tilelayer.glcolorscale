@@ -28,13 +28,14 @@ import {
   SentinelValue,
 } from './types';
 
-// Augment Leaflet definitions to include some helpful "private" methods.
+/**
+ * Augment Leaflet GridLayer definition to include some helpful "private" properties.
+ *
+ * Unfortunately, using properties that aren't part of GridLayer's public API makes this component
+ * brittle. If GridLayer's implementation changes significantly, it could break this component.
+ * I don't see a way around this limitation, however, without reimplementing much of GridLayer.
+ */
 declare module 'leaflet' {
-  interface TileLayer {
-    _getSubdomain(tilepoint: TileCoordinates): string;
-    _getZoomForUrl(): number;
-  }
-
   interface GridLayer {
     _tileZoom: number;
     _globalTileRange: L.Bounds;
@@ -143,9 +144,6 @@ export class GLTileLayerComponent extends L.GridLayer {
   protected _preloadTileCache?: PreloadTileCache;
   protected _tiles: TileCache;
 
-  protected _getSubdomain: typeof L.TileLayer.prototype._getSubdomain;
-  protected _getZoomForUrl: typeof L.TileLayer.prototype._getZoomForUrl;
-
   constructor(options: Options) {
     super(options);
 
@@ -159,13 +157,10 @@ export class GLTileLayerComponent extends L.GridLayer {
     const tileSize: number = this._tileSizeAsNumber();
     const renderer = new Renderer(tileSize, nodataValue);
 
+    // Set instance properties.
     Object.assign(this, {
-      // Set instance properties.
       _renderer: renderer,
       _preloadTileCache: undefined,
-      // Mix in helper methods from L.TileLayer.
-      _getSubdomain: L.TileLayer.prototype._getSubdomain,
-      _getZoomForUrl: L.TileLayer.prototype._getZoomForUrl,
     });
 
     this._maybePreload(preloadUrl);
@@ -230,8 +225,9 @@ export class GLTileLayerComponent extends L.GridLayer {
   }
 
   /**
-   * From Leaflet.TileLayer; modified to accept a `url` parameter to allow preloading from a
-   * URL other than `this.options.url`.
+   * adapted from L.TileLayer (v1.2.0):
+   * modified to accept a `url` parameter to allow loading from a URL other than `this.options.url`
+   * (needed for preloading)
    */
   getTileUrl(coords: TileCoordinates, url: string) {
     const data: any = {
@@ -291,6 +287,27 @@ export class GLTileLayerComponent extends L.GridLayer {
     });
 
     return tileCanvas;
+  }
+
+  /**
+   * adapted from eponymous private method in L.TileLayer (v1.2.0)
+   */
+  protected _getSubdomain(tilePoint: TileCoordinates): string {
+    const index = Math.abs(tilePoint.x + tilePoint.y) % this.options.subdomains.length;
+    return this.options.subdomains[index];
+  }
+
+  /**
+   * adapted from eponymous private method in L.TileLayer (v1.2.0)
+   */
+  protected _getZoomForUrl(): number {
+    const {
+      maxZoom,
+      zoomReverse,
+      zoomOffset,
+    } = this.options;
+    const zoom = zoomReverse ? maxZoom - this._tileZoom : this._tileZoom;
+    return zoom + zoomOffset;
   }
 
   /**
