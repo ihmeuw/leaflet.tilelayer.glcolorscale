@@ -622,3 +622,7 @@ export class TileLayerGLColorScale extends L.GridLayer {
     return sentinel || pixelValue;
   }
 }
+
+export function tileLayerGLColorScale(options: Options): TileLayerGLColorScale {
+  return new TileLayerGLColorScale(options);
+}
