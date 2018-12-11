@@ -145,14 +145,13 @@ export class GLTileLayerComponent extends L.GridLayer {
   protected _tiles: TileCache;
 
   constructor(options: Options) {
-    super(options);
-
-    L.Util.setOptions(this, options);
+    const mergedOptions = Object.assign({}, defaultOptions, options);
+    super(mergedOptions);
 
     const {
       nodataValue,
       preloadUrl,
-    } = options;
+    } = mergedOptions;
 
     const tileSize: number = this._tileSizeAsNumber();
     const renderer = new Renderer(tileSize, nodataValue);
