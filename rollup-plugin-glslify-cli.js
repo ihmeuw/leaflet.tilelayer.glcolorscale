@@ -30,6 +30,7 @@ export default function glslify(userOptions = {}) {
     const filter = createFilter(options.include, options.exclude);
 
     return {
+        name: 'rollup-plugin-glslify-cli',
         transform(code, id) {
             if (!filter(id)) return;
 
