@@ -88,7 +88,7 @@ export interface Options extends L.GridLayerOptions {
   crossOrigin?: boolean;
 }
 
-export const DEFAULT_OPTIONS = {
+export const defaultOptions = {
   sentinelValues: [],
   transitions: true,
   transitionTimeMs: 800,
@@ -134,7 +134,7 @@ export const DEFAULT_OPTIONS = {
   crossOrigin: false,
 };
 
-export type InternalOptions = Options & typeof DEFAULT_OPTIONS;
+export type InternalOptions = Options & typeof defaultOptions;
 
 export class GLTileLayerComponent extends L.GridLayer {
   options: InternalOptions;
