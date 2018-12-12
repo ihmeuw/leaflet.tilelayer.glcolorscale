@@ -1,6 +1,5 @@
 import glslify from './rollup-plugin-glslify-cli';
 import postcss from 'rollup-plugin-postcss';
-import sourcemaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 
 import pkg from './package.json';
@@ -35,6 +34,5 @@ export default {
       typescript: require('typescript'),
       useTsconfigDeclarationDir: true,
     }),
-    sourcemaps(),
   ],
 };
