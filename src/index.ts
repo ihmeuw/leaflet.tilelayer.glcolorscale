@@ -187,12 +187,17 @@ export class TileLayerGLColorScale extends L.GridLayer {
    * Leaflet components, no other public methods are provided for imperatively changing the
    * component's state.
    */
-  updateOptions(prevOptions: Options, nextOptions: Options) {
-    L.Util.setOptions(this, nextOptions);
-    this._maybePreload(nextOptions.preloadUrl);
-    if (prevOptions.url !== nextOptions.url) {
+  updateOptions(options: Partial<Options>) {
+    const {
+      url: prevUrl,
+      colorScale: prevColorScale,
+      sentinelValues: prevSentinelValues,
+    } = this.options;
+    L.Util.setOptions(this, options);
+    this._maybePreload(this.options.preloadUrl);
+    if (this.options.url !== prevUrl) {
       this.options.transitions
-      ? this._updateTilesWithTransitions(prevOptions)
+      ? this._updateTilesWithTransitions(prevColorScale, prevSentinelValues)
       : this._updateTiles();
     }
   }
@@ -365,10 +370,13 @@ export class TileLayerGLColorScale extends L.GridLayer {
    * Redraw all active tiles, animating the transition over a time interval specified in
    * `options.transitionTimeMs`.
    */
-  protected async _updateTilesWithTransitions(prevOptions: Options) {
+  protected async _updateTilesWithTransitions(
+    prevColorScale: Color[],
+    prevSentinelValues: SentinelValue[],
+  ) {
     const activeTiles: GridLayerTile[] = this._getActiveTiles();
 
-    const oldTilesData: TileDatum[] = activeTiles.map(({ coords, el }) => ({
+    const prevTilesData: TileDatum[] = activeTiles.map(({ coords, el }) => ({
       coords,
       pixelData: el.pixelData as Uint8Array,
     }));
@@ -386,10 +394,6 @@ export class TileLayerGLColorScale extends L.GridLayer {
       sentinelValues: newSentinelValues = [],
       transitionTimeMs,
     } = this.options;
-    const {
-      colorScale: oldColorScale,
-      sentinelValues: oldSentinelValues = [],
-    } = prevOptions;
 
     // This function will be passed to the Renderer, which will call it after rendering a frame
     // in its offscreen <canvas>.
@@ -402,9 +406,9 @@ export class TileLayerGLColorScale extends L.GridLayer {
     };
 
     // Renderer hooks the render calls to requestAnimationFrame, calling `onFrameRendered` after each is drawn.
-    if (newColorScale === oldColorScale) {
+    if (newColorScale === prevColorScale) {
       this._renderer.renderTilesWithTransition(
-        oldTilesData,
+        prevTilesData,
         newTilesData,
         newColorScale,
         newSentinelValues,
@@ -413,11 +417,11 @@ export class TileLayerGLColorScale extends L.GridLayer {
       );
     } else {
       this._renderer.renderTilesWithTransitionAndNewColorScale(
-        oldTilesData,
+        prevTilesData,
         newTilesData,
-        oldColorScale,
+        prevColorScale,
         newColorScale,
-        oldSentinelValues,
+        prevSentinelValues,
         newSentinelValues,
         transitionTimeMs,
         onFrameRendered,
