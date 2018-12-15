@@ -60,9 +60,9 @@ interface EventsObject {
 
 export interface Options extends L.GridLayerOptions {
   url: string;
+  nodataValue: number;
   colorScale: Color[];
   sentinelValues?: SentinelValue[];
-  nodataValue: number;
   preloadUrl?: string;
   transitions?: boolean;
   transitionTimeMs?: number;
