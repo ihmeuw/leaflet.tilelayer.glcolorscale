@@ -10,6 +10,10 @@ import {
 
 import './index.css';
 
+import {
+  COLOR_SCALE_MAX_LENGTH,
+  SENTINEL_VALUES_MAX_LENGTH,
+} from './constants';
 import Renderer from './Renderer';
 import {
   GridLayerTile,
@@ -137,6 +141,9 @@ export const defaultOptions = {
 export type InternalOptions = Options & typeof defaultOptions;
 
 export class TileLayerGLColorScale extends L.GridLayer {
+  static readonly COLOR_SCALE_MAX_LENGTH: number = COLOR_SCALE_MAX_LENGTH;
+  static readonly SENTINEL_VALUES_MAX_LENGTH: number = SENTINEL_VALUES_MAX_LENGTH;
+
   options: InternalOptions;
 
   protected _map: L.Map;
