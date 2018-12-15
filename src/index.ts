@@ -138,6 +138,10 @@ export const defaultOptions = {
   crossOrigin: false,
 };
 
+/**
+ * The options type used internally. Because submitted options are merged with defaults, fewer
+ * properties have the potential to be `undefined` compared with `Options`.
+ */
 export type InternalOptions = Options & typeof defaultOptions;
 
 export class TileLayerGLColorScale extends L.GridLayer {
@@ -222,7 +226,7 @@ export class TileLayerGLColorScale extends L.GridLayer {
       mousemove,
       contextmenu,
     }, handler => !isUndefined(handler));
-    // Combine events defined on this "class" with events defined on the parent GridLayer.
+    // Combine events defined on this class with events defined on the parent GridLayer.
     return {
       // Include events from GridLayer.
       ...(L.GridLayer.prototype.getEvents as () => EventsObject).call(this),
