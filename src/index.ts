@@ -145,13 +145,14 @@ export class TileLayerGLColorScale extends L.GridLayer {
   protected _tiles: TileCache;
 
   constructor(options: Options) {
-    const mergedOptions = Object.assign({}, defaultOptions, options);
-    super(mergedOptions);
+    // Merge options with defaults and invoke GridLayer's constructor,
+    // which sets the merged options as `this.options`.
+    super(Object.assign({}, defaultOptions, options));
 
     const {
       nodataValue,
       preloadUrl,
-    } = mergedOptions;
+    } = this.options;
 
     const tileSize: number = this._tileSizeAsNumber();
     const renderer = new Renderer(tileSize, nodataValue);
