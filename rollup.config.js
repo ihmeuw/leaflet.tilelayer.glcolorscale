@@ -32,7 +32,6 @@ export default {
     typescript({
       clean: true,
       typescript: require('typescript'),
-      useTsconfigDeclarationDir: true,
     }),
   ],
 };

@@ -10,9 +10,9 @@
     "src/"
   ],
   "scripts": {
-    "build": "npm run clean && npm run copy_types && rollup -c",
+    "build": "npm run clean && npm run declarations && rollup -c",
     "clean": "rimraf dist && mkdir -p dist/types",
-    "copy_types": "cp src/types.d.ts dist/types/",
+    "declarations": "tsc --declaration --emitDeclarationOnly --declarationDir ./dist/types/ && cp src/types.d.ts dist/types/",
     "prepublishOnly": "npm run build",
     "test": "tsc --noEmit"
   },

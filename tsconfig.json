@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "declarationDir": "./dist/types/",
     "lib": ["dom", "es2016"],
     "moduleResolution": "node",
     "noImplicitAny": true,
