@@ -50,8 +50,9 @@ export default [
     output: {
       file: 'dist/bundle.min.js',
       format: 'iife',
-      name: 'Leaflet.TileLayer',
-      globals: { leaflet: 'Leaflet' },
+      name: 'L.TileLayer',
+      extend: true,
+      globals: { leaflet: 'L' },
       sourcemap: true,
     },
     external: [...Object.keys(pkg.peerDependencies || {})],
