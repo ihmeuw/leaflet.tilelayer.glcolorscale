@@ -144,7 +144,7 @@ const defaultOptions = {
  */
 export type InternalOptions = Options & typeof defaultOptions;
 
-export class TileLayerGLColorScale extends L.GridLayer {
+export class GLColorScale extends L.GridLayer {
   static readonly COLOR_SCALE_MAX_LENGTH: number = COLOR_SCALE_MAX_LENGTH;
   static readonly SENTINEL_VALUES_MAX_LENGTH: number = SENTINEL_VALUES_MAX_LENGTH;
   static readonly defaultOptions = defaultOptions;
