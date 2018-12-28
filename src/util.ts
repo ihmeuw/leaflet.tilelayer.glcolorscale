@@ -1,6 +1,6 @@
 import { memoize } from 'lodash-es';
-import { PNG } from 'pngjs';
 import REGL from 'regl';
+import { decode } from 'upng-js';
 
 import {
   Color,
@@ -106,16 +106,8 @@ export async function fetchPNGData(url: string, nodataValue: number, tileDimensi
     });
     xhr.addEventListener('error', reject);
     xhr.send(null);
-  }).then((data: Buffer) => {
-    return new Promise<Uint8Array>((resolve, reject) => {
-      new PNG().parse(data, (err, png) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(png.data);
-        }
-      });
-    });
+  }).then((data: ArrayBuffer) => {
+    return new Uint8Array(decode(data).data);
   }).catch(() => createNoDataTile(nodataValue, tileDimension));
 }
 
