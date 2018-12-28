@@ -111,6 +111,12 @@ export default class Renderer {
       }),
     );
 
+    // Convert the color scale and sentinel values to the form expected by WebGL.
+    const webGLColorScale = util.convertColorScale(colorScale);
+    const webGLSentinelValues = util.convertColorScale(sentinelValues);
+
+    const canvasSize = [canvasWidth, canvasHeight] as Pair<number>;
+
     // Clear existing tiles from cache.
     textureManager.clearTiles();
     // Clear the canvas.
@@ -129,9 +135,9 @@ export default class Renderer {
 
       // Render each tile.
       this.drawTile(chunk.map(({ canvasCoords }, index) => ({
-        colorScale: util.convertColorScale(colorScale),
-        sentinelValues: util.convertColorScale(sentinelValues),
-        canvasSize: [canvasWidth, canvasHeight] as Pair<number>,
+        colorScale: webGLColorScale,
+        sentinelValues: webGLSentinelValues,
+        canvasSize,
         canvasCoordinates: canvasCoords,
         textureBounds: textureBounds[index],
         texture: textureManager.texture,
