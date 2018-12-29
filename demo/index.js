@@ -7,7 +7,9 @@ var year = 2000;
 var map = L.map('map').fitBounds(bounds);
 
 // Create base layer (without labels).
-L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png').addTo(map);
+L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://carto.com/attribution">CARTO</a>',
+}).addTo(map);
 
 // Create the tile layer.
 var tileLayer = new L.TileLayer.GLColorScale({
@@ -23,6 +25,7 @@ var tileLayer = new L.TileLayer.GLColorScale({
   bounds: bounds,
   maxNativeZoom: 5,
   noWrap: true,
+  attribution: '<a href="http://www.healthdata.org/data-visualization/lbd-U5M">IHME</a>',
 }).addTo(map);
 
 // Create label layer.
