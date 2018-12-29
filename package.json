@@ -60,6 +60,6 @@
     "upng-js": "~2.1.0"
   },
   "peerDependencies": {
-    "leaflet": "~1.2"
+    "leaflet": "1.x"
   }
 }
