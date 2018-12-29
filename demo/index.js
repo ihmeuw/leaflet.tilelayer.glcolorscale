@@ -2,7 +2,6 @@ var bounds = [
   [37.5422237953776, 51.4153947924142],
   [-46.9810436586275, -25.3587574757147],
 ];
-var year = 2000;
 
 var map = L.map('map').fitBounds(bounds);
 
@@ -13,7 +12,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{
 
 // Create the tile layer.
 var tileLayer = new L.TileLayer.GLColorScale({
-  url: getTileURLByYear(year),
+  url: getTileURLByYear(2000),
   colorScale: [
     {color: "rgb(132, 54, 168)", offset: 0},
     {color: "rgb(132, 54, 168)", label: "≤ 25", offset: 25},
@@ -37,4 +36,69 @@ function getTileURLByYear(year) {
     year: year,
   });
   return base + '?' + querystring;
+}
+
+// Create a custom Leaflet control to set the year.
+var YearControl = L.Control.extend({
+  onAdd: function() {
+    return createRangeSlider('year-control', 'Year', [2000, 2015], 5, 2000, update);
+  },
+});
+
+// Instantiate the control and add it to the map.
+new YearControl({ position: 'bottomleft' }).addTo(map);
+
+var TitleControl = L.Control.extend({
+  onAdd: function() {
+    var title = L.DomUtil.create('h1', 'title');
+    title.textContent = 'Local Burden of Disease – Under-5 Mortality';
+    return title;
+  },
+});
+
+new TitleControl({
+  position: 'topright',
+}).addTo(map);
+
+// Function to update the map when the year slider is moved.
+function update(year) {
+  tileLayer.updateOptions({
+    url: getTileURLByYear(year),
+  });
+}
+
+function createRangeSlider(containerID, label, range, step, defaultValue, changeCallback) {
+  var name = containerID + '-input';
+  var container = createElementWithAttributes('div', { id: containerID });
+  var labelElement = createElementWithAttributes('label', { for: name });
+  labelElement.textContent = label + ': ' + defaultValue;
+  var inputElement = createElementWithAttributes('input', {
+    type: 'range',
+    id: name,
+    min: range[0],
+    max: range[1],
+    step: step,
+    value: defaultValue,
+  });
+  inputElement.addEventListener('change', function() {
+    // Update the label using the new value.
+    labelElement.textContent = label + ': ' + inputElement.value;
+    changeCallback(inputElement.valueAsNumber);
+  });
+  container.appendChild(labelElement);
+  container.appendChild(inputElement);
+  return container;
+}
+
+function createElementWithAttributes(tagName, attributeMap) {
+  var element = document.createElement(tagName);
+  var keys = Object.keys(attributeMap);
+  for (var i = 0; i < keys.length; ++i) {
+    var name = keys[i];
+    var value = attributeMap[name];
+    if (typeof value != 'boolean' || value) {
+      element.setAttribute(name, value);
+    }
+  }
+  return element;
 }

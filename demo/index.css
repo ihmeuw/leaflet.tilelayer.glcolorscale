@@ -4,3 +4,30 @@ html, body, #map {
   padding: 0;
   margin: 0;
 }
+
+#year-control {
+  background-color: #fff;
+  border-radius: 4px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#year-control label {
+  padding-right: 5px;
+}
+
+#year-control input {
+  vertical-align: middle;
+}
+
+.title {
+  background-color: #fff;
+  border-radius: 4px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  font-size: 20px;
+  font-weight: normal;
+}
