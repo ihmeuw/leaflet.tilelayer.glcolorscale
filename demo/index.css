@@ -5,6 +5,10 @@ html, body, #map {
   margin: 0;
 }
 
+.leaflet-grab, .leaflet-interactive {
+  cursor: crosshair;
+}
+
 #year-control {
   background-color: #fff;
   border-radius: 4px;
