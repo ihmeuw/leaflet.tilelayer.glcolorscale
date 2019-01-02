@@ -81,9 +81,9 @@ export interface Options extends L.GridLayerOptions {
   // from TileLayerOptions
   minZoom?: number;
   maxZoom?: number;
+  subdomains?: string | string[];
   maxNativeZoom?: number;
   minNativeZoom?: number;
-  subdomains?: string[];
   errorTileUrl?: string;
   zoomOffset?: number;
   tms?: boolean;
