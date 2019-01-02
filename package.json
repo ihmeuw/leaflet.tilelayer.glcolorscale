@@ -1,6 +1,6 @@
 {
   "name": "leaflet.tilelayer.glcolorscale",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Custom Leaflet TileLayer using WebGL to colorize floating-point pixels according to a specified color scale",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
