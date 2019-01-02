@@ -11,6 +11,10 @@
 - a simple declarative API
 - TypeScript definitions
 
+## Demo
+
+Try it out [here](https://ihmeuw.github.io/leaflet.tilelayer.glcolorscale/demo/). You can find the demo code in the `demo` directory of this repository.
+
 ## Accessing the plugin
 
 ### With module loader
