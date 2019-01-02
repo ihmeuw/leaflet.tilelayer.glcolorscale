@@ -3,6 +3,9 @@ var bounds = [
   [-46.9810436586275, -25.3587574757147],
 ];
 
+// Show this many places after the decimal when displaying pixel value.
+var VALUE_DISPLAY_PRECISION = 1;
+
 var map = L.map('map').fitBounds(bounds);
 
 // Create base layer (without labels).
@@ -25,6 +28,7 @@ var tileLayer = new L.TileLayer.GLColorScale({
   maxNativeZoom: 5,
   noWrap: true,
   attribution: '<a href="http://www.healthdata.org/data-visualization/lbd-U5M">IHME</a>',
+  onmousemove: updateValueDisplay,
 }).addTo(map);
 
 // Create label layer.
@@ -45,9 +49,6 @@ var YearControl = L.Control.extend({
   },
 });
 
-// Instantiate the control and add it to the map.
-new YearControl({ position: 'bottomleft' }).addTo(map);
-
 var TitleControl = L.Control.extend({
   onAdd: function() {
     var title = L.DomUtil.create('h1', 'title');
@@ -56,15 +57,45 @@ var TitleControl = L.Control.extend({
   },
 });
 
-new TitleControl({
-  position: 'topright',
-}).addTo(map);
+// custom Leaflet control to display the value of the pixel under the cursor
+var ValueDisplayControl = L.Control.extend({
+  onAdd: function() {
+    var element = L.DomUtil.create('p', 'value-display');
+    // Element should be hidden initially.
+    element.style.display = 'none';
+    return element;
+  },
+  updateText: function(text) {
+    var element = this.getContainer();
+    if (!text) {
+      // Hide the element if there's no text to display.
+      element.style.display = 'none';
+    } else {
+      // Otherwise show the element and reset its text.
+      element.style.display = 'block';
+      element.textContent = text;
+    }
+  },
+});
+
+// Instantiate the controls and add them to the map.
+new YearControl({ position: 'bottomleft' }).addTo(map);
+new TitleControl({ position: 'topright' }).addTo(map);
+var valueDisplay = new ValueDisplayControl({ position: 'topright' }).addTo(map);
 
 // Function to update the map when the year slider is moved.
 function update(year) {
   tileLayer.updateOptions({
     url: getTileURLByYear(year),
   });
+}
+
+// function to update the value display when the mouse hovers over pixels
+function updateValueDisplay(mouseEvent) {
+  var pixelValue = mouseEvent.pixelValue;
+  // if no-data pixel, pixelValue will be `undefined`
+  var text = pixelValue === undefined ? '' : 'Value: ' + pixelValue.toFixed(VALUE_DISPLAY_PRECISION);
+  valueDisplay.updateText(text);
 }
 
 function createRangeSlider(containerID, label, range, step, defaultValue, changeCallback) {
