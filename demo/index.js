@@ -48,14 +48,22 @@ function getTileURLByYear(year) {
 // custom Leaflet control that allows user to set the year
 var YearControl = L.Control.extend({
   onAdd: function() {
-    return createRangeSlider('year-control', 'Year', [2000, 2015], 5, 2000, update);
+    return createRangeSlider(
+      'year-control',
+      'year-control my-leaflet-control',
+      'Year',
+      [2000, 2015],
+      5,
+      2000,
+      update
+    );
   },
 });
 
 // custom Leaflet control to display a title for the visualization
 var TitleControl = L.Control.extend({
   onAdd: function() {
-    var title = L.DomUtil.create('h1', 'title');
+    var title = L.DomUtil.create('h1', 'title my-leaflet-control');
     title.textContent = 'Local Burden of Disease – Under-5 Mortality';
     return title;
   },
@@ -64,7 +72,7 @@ var TitleControl = L.Control.extend({
 // custom Leaflet control to display the value of the pixel under the cursor
 var ValueDisplayControl = L.Control.extend({
   onAdd: function() {
-    var element = L.DomUtil.create('p', 'value-display');
+    var element = L.DomUtil.create('p', 'value-display my-leaflet-control');
     // Element should be hidden initially.
     element.style.display = 'none';
     return element;
@@ -102,9 +110,20 @@ function updateValueDisplay(mouseEvent) {
   valueDisplay.updateText(text);
 }
 
-function createRangeSlider(containerID, label, range, step, defaultValue, changeCallback) {
+function createRangeSlider(
+  containerID,
+  containerClassNames,
+  label,
+  range,
+  step,
+  defaultValue,
+  changeCallback
+) {
   var name = containerID + '-input';
-  var container = createElementWithAttributes('div', { id: containerID });
+  var container = createElementWithAttributes('div', {
+    id: containerID,
+    class: containerClassNames,
+  });
   var labelElement = createElementWithAttributes('label', { for: name });
   labelElement.textContent = label + ': ' + defaultValue;
   var inputElement = createElementWithAttributes('input', {
