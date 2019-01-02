@@ -67,8 +67,10 @@ export interface Options extends L.GridLayerOptions {
   transitions?: boolean;
   transitionTimeMs?: number;
 
+  // handler for the 'load' event, fired when all tiles loaded.
   onload?: (event: { url: string }) => void;
 
+  // mouse event handlers
   onclick?: (event: MouseEvent) => void;
   ondblclick?: (event: MouseEvent) => void;
   onmousedown?: (event: MouseEvent) => void;
@@ -97,44 +99,15 @@ const defaultOptions = {
   transitions: true,
   transitionTimeMs: 800,
 
-  // @option subdomains: String|String[] = 'abc'
-  // Subdomains of the tile service. Can be passed in the form of one string (where each letter is
-  // a subdomain name) or an array of strings.
-  subdomains: ['a', 'b', 'c'],
-
-  // @option minZoom: Number = 0
-  // The minimum zoom level down to which this layer will be displayed (inclusive).
+  // default TileLayer options
   minZoom: 0,
-
-  // @option maxZoom: Number = 18
-  // The maximum zoom level up to which this layer will be displayed (inclusive).
   maxZoom: 18,
-
-  // @option errorTileUrl: String = ''
-  // URL to the tile image to show in place of the tile that failed to load.
+  subdomains: 'abc',
   errorTileUrl: '',
-
-  // @option zoomOffset: Number = 0
-  // The zoom number used in tile URLs will be offset with this value.
   zoomOffset: 0,
-
-  // @option tms: Boolean = false
-  // If `true`, inverses Y axis numbering for tiles (turn this on for
-  // [TMS](https://en.wikipedia.org/wiki/Tile_Map_Service) services).
   tms: false,
-
-  // @option zoomReverse: Boolean = false
-  // If set to true, the zoom number used in tile URLs will be reversed (`maxZoom - zoom` instead of `zoom`)
   zoomReverse: false,
-
-  // @option detectRetina: Boolean = false
-  // If `true` and user is on a retina display, it will request four tiles of half the specified
-  // size and a bigger zoom level in place of one to utilize the high resolution.
   detectRetina: false,
-
-  // @option crossOrigin: Boolean = false
-  // If true, all tiles will have their crossOrigin attribute set to ''. This is needed if you want
-  // to access tile pixel data.
   crossOrigin: false,
 };
 
