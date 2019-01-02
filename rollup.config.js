@@ -50,8 +50,7 @@ export default [
     output: {
       file: 'dist/bundle.min.js',
       format: 'iife',
-      name: 'L.TileLayer',
-      extend: true,
+      name: 'L.TileLayer.GLColorScale',
       globals: { leaflet: 'L' },
       sourcemap: true,
     },
