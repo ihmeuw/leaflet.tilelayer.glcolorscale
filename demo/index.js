@@ -6,14 +6,17 @@ var bounds = [
 // Show this many places after the decimal when displaying pixel value.
 var VALUE_DISPLAY_PRECISION = 1;
 
+// Create the Leaflet map.
 var map = L.map('map').fitBounds(bounds);
 
-// Create base layer (without labels).
+// Create layers and add to the map.
+
+// base layer (without labels)
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://carto.com/attribution">CARTO</a>',
 }).addTo(map);
 
-// Create the tile layer.
+// tile layer showing data
 var tileLayer = new L.TileLayer.GLColorScale({
   url: getTileURLByYear(2000),
   colorScale: [
@@ -31,7 +34,7 @@ var tileLayer = new L.TileLayer.GLColorScale({
   onmousemove: updateValueDisplay,
 }).addTo(map);
 
-// Create label layer.
+// label layer
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png').addTo(map);
 
 function getTileURLByYear(year) {
@@ -42,13 +45,14 @@ function getTileURLByYear(year) {
   return base + '?' + querystring;
 }
 
-// Create a custom Leaflet control to set the year.
+// custom Leaflet control that allows user to set the year
 var YearControl = L.Control.extend({
   onAdd: function() {
     return createRangeSlider('year-control', 'Year', [2000, 2015], 5, 2000, update);
   },
 });
 
+// custom Leaflet control to display a title for the visualization
 var TitleControl = L.Control.extend({
   onAdd: function() {
     var title = L.DomUtil.create('h1', 'title');
@@ -83,7 +87,7 @@ new YearControl({ position: 'bottomleft' }).addTo(map);
 new TitleControl({ position: 'topright' }).addTo(map);
 var valueDisplay = new ValueDisplayControl({ position: 'topright' }).addTo(map);
 
-// Function to update the map when the year slider is moved.
+// function to update the map when the year slider is moved
 function update(year) {
   tileLayer.updateOptions({
     url: getTileURLByYear(year),
