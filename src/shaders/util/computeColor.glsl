@@ -1,11 +1,13 @@
 #pragma glslify: isCloseEnough = require(./isCloseEnough.glsl)
 #pragma glslify: ScaleStop = require(./ScaleStop.glsl)
 
-// Define the following variables in the importing script (names can be whatever you want):
-// const int SCALE_MAX_LENGTH = 16;
-// const int SENTINEL_MAX_LENGTH = 4;
-// Then link them the variables in this script, like this:
-// #pragma glslify: computeColor = require('./path/to/computeColor.glsl',SCALE_MAX_LENGTH=yourvarname1,SENTINEL_MAX_LENGTH=yourvarname2)
+#ifndef SCALE_MAX_LENGTH
+#define SCALE_MAX_LENGTH 16
+#endif
+
+#ifndef SENTINEL_MAX_LENGTH
+#define SENTINEL_MAX_LENGTH 16
+#endif
 
 vec4 computeColor(
   float inputVal,

@@ -8,7 +8,7 @@ precision mediump float;
 #define SENTINEL_MAX_LENGTH 4
 #define TRANSPARENT vec4(0.0, 0.0, 0.0, 0.0)
 
-#pragma glslify: computeColor = require('./util/computeColor.glsl',SCALE_MAX_LENGTH=SCALE_MAX_LENGTH,SENTINEL_MAX_LENGTH=SENTINEL_MAX_LENGTH)
+#pragma glslify: computeColor = require('./util/computeColor.glsl')
 #pragma glslify: isCloseEnough = require('./util/isCloseEnough.glsl')
 #pragma glslify: rgbaToFloat = require('./util/rgbaToFloat.glsl')
 #pragma glslify: ScaleStop = require('./util/ScaleStop.glsl')
