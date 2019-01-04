@@ -23,12 +23,12 @@ void bytesToBits(const in ivec4 bytes, out bool bits[32]) {
 
 // Compute the exponent of the 32-bit float.
 float getExponent(bool bits[32]) {
-  const int START_INDEX = 1;
-  const int BIT_STRING_LENGTH = 8;
-  const int END_BEFORE_INDEX = START_INDEX + BIT_STRING_LENGTH;
+  const int startIndex = 1;
+  const int bitStringLength = 8;
+  const int endBeforeIndex = startIndex + bitStringLength;
   float acc = 0.0;
-  int pow2 = BIT_STRING_LENGTH - 1;
-  for (int bitIndex = START_INDEX; bitIndex < END_BEFORE_INDEX; ++bitIndex) {
+  int pow2 = bitStringLength - 1;
+  for (int bitIndex = startIndex; bitIndex < endBeforeIndex; ++bitIndex) {
     acc += float(bits[bitIndex]) * exp2(float(pow2--));
   }
   return acc;
@@ -36,14 +36,14 @@ float getExponent(bool bits[32]) {
 
 // Compute the mantissa of the 32-bit float.
 float getMantissa(bool bits[32], bool subnormal) {
-  const int START_INDEX = 9;
-  const int BIT_STRING_LENGTH = 23;
-  const int END_BEFORE_INDEX = START_INDEX + BIT_STRING_LENGTH;
+  const int startIndex = 9;
+  const int bitStringLength = 23;
+  const int endBeforeIndex = startIndex + bitStringLength;
   // Leading/implicit/hidden bit convention:
   // If the number is not subnormal (with exponent 0), we add a leading 1 digit.
-  float acc = float(!subnormal) * exp2(float(BIT_STRING_LENGTH));
-  int pow2 = BIT_STRING_LENGTH - 1;
-  for (int bitIndex = START_INDEX; bitIndex < END_BEFORE_INDEX; ++bitIndex) {
+  float acc = float(!subnormal) * exp2(float(bitStringLength));
+  int pow2 = bitStringLength - 1;
+  for (int bitIndex = startIndex; bitIndex < endBeforeIndex; ++bitIndex) {
     acc += float(bits[bitIndex]) * exp2(float(pow2--));
   }
   return acc;
