@@ -4,8 +4,8 @@ precision highp float;
 precision mediump float;
 #endif
 
-const int SCALE_MAX_LENGTH = 16;
-const int SENTINEL_MAX_LENGTH = 4;
+#define SCALE_MAX_LENGTH 16
+#define SENTINEL_MAX_LENGTH 4
 
 #pragma glslify: computeColor = require('./util/computeColor.glsl',SCALE_MAX_LENGTH=SCALE_MAX_LENGTH,SENTINEL_MAX_LENGTH=SENTINEL_MAX_LENGTH)
 #pragma glslify: isCloseEnough = require('./util/isCloseEnough.glsl')
