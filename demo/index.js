@@ -39,7 +39,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_label
 
 function getTileURLByYear(year) {
   var base = 'https://vizhub.healthdata.org/lbd/api/v1/themes/under5/schemas/mortality/map/raster/{z}/{x}/{y}.png';
-  var querystring = L.Util.template('age_group=under5&location_id=1&measure=mortality&stat=mean&year={year}', {
+  var querystring = L.Util.template('age_group=under5&location_id=0&measure=mortality&stat=mean&year={year}', {
     year: year,
   });
   return base + '?' + querystring;
