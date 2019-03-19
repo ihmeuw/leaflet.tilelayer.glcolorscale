@@ -55,10 +55,10 @@
     "typescript": "~2.9"
   },
   "dependencies": {
-    "lodash-es": "~4.17",
-    "native-promise-only": "~0.8.1",
-    "regl": "~1.3.9",
-    "upng-js": "~2.1.0"
+    "lodash-es": "^4.17",
+    "native-promise-only": "^0.8.1",
+    "regl": "^1.3.9",
+    "upng-js": "^2.1.0"
   },
   "peerDependencies": {
     "leaflet": "1.x"
