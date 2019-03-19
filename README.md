@@ -107,7 +107,7 @@ This TileLayer accepts all the same options as `Leaflet.GridLayer` and `Leaflet.
 | ---------------- | --------------- | --------- | ----------- |
 | url              | String          | undefined | tile URL
 | nodataValue      | Number          | undefined | pixel value to interpret as no-data
-| colorScale       | Color[]         | undefined | array of color stops used for linear interpolation
+| colorScale       | Color[]         | []        | array of color stops used for linear interpolation
 | sentinelValues   | SentinelValue[] | []        | array of fixed values to be matched exactly
 | preloadUrl       | String          | undefined | tile URL to preload in the background
 | transitions      | Boolean         | true      | whether to show pixel transitions when changing URL or color scales

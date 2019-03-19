@@ -60,7 +60,7 @@ interface EventsObject {
 export interface Options extends L.GridLayerOptions {
   url: string;
   nodataValue: number;
-  colorScale: Color[];
+  colorScale?: Color[];
   sentinelValues?: SentinelValue[];
   preloadUrl?: string;
   transitions?: boolean;
@@ -94,6 +94,7 @@ export interface Options extends L.GridLayerOptions {
 }
 
 const defaultOptions = {
+  colorScale: [],
   sentinelValues: [],
   transitions: true,
   transitionTimeMs: 800,
@@ -135,6 +136,8 @@ export default class GLColorScale extends L.GridLayer {
     // which sets the merged options as `this.options`.
     super(Object.assign({}, defaultOptions, options));
 
+    this._checkColorScaleAndSentinels();
+
     const {
       nodataValue,
       preloadUrl,
@@ -169,6 +172,7 @@ export default class GLColorScale extends L.GridLayer {
       sentinelValues: prevSentinelValues,
     } = this.options;
     L.Util.setOptions(this, options);
+    this._checkColorScaleAndSentinels();
     this._maybePreload(this.options.preloadUrl);
     if (this.options.url !== prevUrl) {
       this.options.transitions
@@ -246,7 +250,7 @@ export default class GLColorScale extends L.GridLayer {
   createTile(coords: TileCoordinates, done: L.DoneCallback): TileElement {
     const {
       colorScale,
-      sentinelValues = [],
+      sentinelValues,
       tileSize,
       url,
     } = this.options;
@@ -278,6 +282,15 @@ export default class GLColorScale extends L.GridLayer {
     });
 
     return tileCanvas;
+  }
+
+  /**
+   * Check invariant: Either `colorScale` or `sentinelValues` must be of non-zero length.
+   */
+  protected _checkColorScaleAndSentinels() {
+    if (this.options.colorScale.length === 0 && this.options.sentinelValues.length === 0) {
+      throw new Error('Either `colorScale` or `sentinelValues` must be of non-zero length.');
+    }
   }
 
   /**
