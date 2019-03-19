@@ -67,6 +67,7 @@ void main() {
     } else if (
       aIsNodata
       || bIsNodata
+      || colorScaleLength == 0
       || isSentinelValue(sentinelValues, sentinelValuesLength, pixelFloatValueA)
       || isSentinelValue(sentinelValues, sentinelValuesLength, pixelFloatValueB)
     ) {
