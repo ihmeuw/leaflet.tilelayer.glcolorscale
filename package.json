@@ -37,7 +37,7 @@
     "animation"
   ],
   "devDependencies": {
-    "@types/leaflet": "1.2.1",
+    "@types/leaflet": "~1.4",
     "@types/lodash": "4.14.85",
     "@types/lodash-es": "4.17.0",
     "@types/upng-js": "~2.1.1",

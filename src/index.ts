@@ -41,7 +41,6 @@ import {
  */
 declare module 'leaflet' {
   interface GridLayer {
-    _tileZoom: number;
     _globalTileRange: L.Bounds;
     _pruneTiles(): void;
   }
@@ -127,7 +126,9 @@ export default class GLColorScale extends L.GridLayer {
   protected _map: L.Map;
   protected _renderer: Renderer;
   protected _preloadTileCache?: PreloadTileCache;
-  protected _tiles: TileCache;
+  // We need to define the `_tiles` cache with the same type as in the base class,
+  // though our `_tiles` property is actually of type `TileCache`
+  protected _tiles: L.InternalTiles;
 
   constructor(options: Options) {
     // Merge options with defaults and invoke GridLayer's constructor,
@@ -242,7 +243,7 @@ export default class GLColorScale extends L.GridLayer {
    * This function is called by the underlying Leaflet.GridLayer when it creates a new tile. This
    * occurs (a) when the layer first loads and (b) when panning or zooming the map.
    */
-  createTile(coords: TileCoordinates, done: (error: Error | null, tile: HTMLElement) => void): TileElement {
+  createTile(coords: TileCoordinates, done: L.DoneCallback): TileElement {
     const {
       colorScale,
       sentinelValues = [],
@@ -273,7 +274,7 @@ export default class GLColorScale extends L.GridLayer {
 
       // Copy contents to tileCanvas.
       this._copyToTileCanvas(tileCanvas, sourceX, sourceY);
-      done(null, tileCanvas);
+      done(undefined, tileCanvas);
     });
 
     return tileCanvas;
@@ -296,7 +297,8 @@ export default class GLColorScale extends L.GridLayer {
       zoomReverse,
       zoomOffset,
     } = this.options;
-    const zoom = zoomReverse ? maxZoom - this._tileZoom : this._tileZoom;
+    const tileZoom = this._tileZoom as number;
+    const zoom = zoomReverse ? maxZoom - tileZoom : tileZoom;
     return zoom + zoomOffset;
   }
 
@@ -441,7 +443,8 @@ export default class GLColorScale extends L.GridLayer {
     this._pruneTiles();
     // Any tiles remaining are active tiles.
     // We sort them by their tile coordinates (by z, then x, then y) to ensure consistent ordering.
-    return values(this._tiles).sort((a, b) => util.compareTileCoordinates(a.coords, b.coords));
+    const tiles = util.staticCast<TileCache>(this._tiles);
+    return values(tiles).sort((a, b) => util.compareTileCoordinates(a.coords, b.coords));
   }
 
   /**
@@ -532,7 +535,7 @@ export default class GLColorScale extends L.GridLayer {
   protected _wrapMouseEventHandler(handler: (event: MouseEvent) => void): (event: L.LeafletMouseEvent) => void {
     return (event) => {
       const { latlng } = event;
-      const pixelCoords: L.Point = this._map.project(latlng, this._tileZoom).floor();
+      const pixelCoords: L.Point = this._map.project(latlng, this._tileZoom as number).floor();
       // Find the tile containing the point.
       const containingTile: GridLayerTile | undefined = this._getTileContainingPoint(pixelCoords);
       // Find position within tile.
@@ -549,7 +552,8 @@ export default class GLColorScale extends L.GridLayer {
    * contains the point.
    */
   protected _getTileContainingPoint(point: L.Point): GridLayerTile | undefined {
-    return values(this._tiles).find(tile => {
+    const tiles = util.staticCast<TileCache>(this._tiles);
+    return values(tiles).find(tile => {
       return tile.coords.z === this._tileZoom && this._tileBounds(tile).contains(point);
     });
   }

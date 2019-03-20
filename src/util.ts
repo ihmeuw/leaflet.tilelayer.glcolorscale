@@ -198,3 +198,10 @@ const createNoDataTile = memoize((nodataValue: number, tileDimension: number = 2
   // return the no data tile.
   return new Uint8Array(float32Tile.buffer);
 });
+
+/**
+ * Force TypeScript to interpret value `val` as type `T`.
+ */
+export function staticCast<T>(val: any): T {
+  return val as T;
+}
