@@ -56,6 +56,10 @@ export interface PreloadTileCache {
 }
 
 export interface GridLayerTile {
+  active?: boolean;
+  current: boolean;
+  loaded?: Date;
+  retain?: boolean;
   coords: TileCoordinates;
   el: TileElement;
 }
