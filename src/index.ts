@@ -11,8 +11,8 @@ import {
 import './index.css';
 
 import {
-  COLOR_SCALE_MAX_LENGTH,
-  SENTINEL_VALUES_MAX_LENGTH,
+  SCALE_MAX_LENGTH,
+  SENTINEL_MAX_LENGTH,
 } from './constants';
 import Renderer from './Renderer';
 import {
@@ -118,8 +118,8 @@ const defaultOptions = {
 export type InternalOptions = Options & typeof defaultOptions;
 
 export default class GLColorScale extends L.GridLayer {
-  static readonly COLOR_SCALE_MAX_LENGTH: number = COLOR_SCALE_MAX_LENGTH;
-  static readonly SENTINEL_VALUES_MAX_LENGTH: number = SENTINEL_VALUES_MAX_LENGTH;
+  static readonly SCALE_MAX_LENGTH: number = SCALE_MAX_LENGTH;
+  static readonly SENTINEL_MAX_LENGTH: number = SENTINEL_MAX_LENGTH;
   static readonly defaultOptions = defaultOptions;
 
   options: InternalOptions;
@@ -295,14 +295,14 @@ export default class GLColorScale extends L.GridLayer {
     if (colorScale.length === 0 && sentinelValues.length === 0) {
       throw new Error('Either `colorScale` or `sentinelValues` must be of non-zero length.');
     }
-    if (colorScale.length > COLOR_SCALE_MAX_LENGTH) {
+    if (colorScale.length > SCALE_MAX_LENGTH) {
       throw new Error(
-        `Color scale length ${colorScale.length} exceeds the maximum, ${COLOR_SCALE_MAX_LENGTH}.`,
+        `Color scale length ${colorScale.length} exceeds the maximum, ${SCALE_MAX_LENGTH}.`,
       );
     }
-    if (sentinelValues.length > SENTINEL_VALUES_MAX_LENGTH) {
+    if (sentinelValues.length > SENTINEL_MAX_LENGTH) {
       throw new Error(
-        `Sentinel values length ${sentinelValues.length} exceeds the maximum, ${SENTINEL_VALUES_MAX_LENGTH}.`,
+        `Sentinel values length ${sentinelValues.length} exceeds the maximum, ${SENTINEL_MAX_LENGTH}.`,
       );
     }
   }

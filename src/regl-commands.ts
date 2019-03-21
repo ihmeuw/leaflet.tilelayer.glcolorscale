@@ -8,9 +8,9 @@ import fragInterpolateValue from './shaders/interpolateValue.frag.glsl';
 import fragSingle from './shaders/single.frag.glsl';
 
 import {
-  COLOR_SCALE_MAX_LENGTH,
   DEFAULT_COLOR_STOP,
-  SENTINEL_VALUES_MAX_LENGTH,
+  SCALE_MAX_LENGTH,
+  SENTINEL_MAX_LENGTH,
 } from './constants';
 import {
   DrawCommon,
@@ -24,12 +24,12 @@ const littleEndian = util.machineIsLittleEndian();
 
 const bindStructArray = util.bindStructArray.bind(null, ['color', 'offset'], DEFAULT_COLOR_STOP);
 
-const colorScaleUniforms = bindStructArray(COLOR_SCALE_MAX_LENGTH, 'colorScale');
-const sentinelValuesUniforms = bindStructArray(SENTINEL_VALUES_MAX_LENGTH, 'sentinelValues');
+const colorScaleUniforms = bindStructArray(SCALE_MAX_LENGTH, 'colorScale');
+const sentinelValuesUniforms = bindStructArray(SENTINEL_MAX_LENGTH, 'sentinelValues');
 
 const fragMacros = {
-  SCALE_MAX_LENGTH: COLOR_SCALE_MAX_LENGTH,
-  SENTINEL_MAX_LENGTH: SENTINEL_VALUES_MAX_LENGTH,
+  SCALE_MAX_LENGTH,
+  SENTINEL_MAX_LENGTH,
 };
 
 /**
@@ -150,10 +150,10 @@ export function createDrawTileInterpolateColorCommand(
     frag: util.defineMacros(fragInterpolateColor, fragMacros),
     uniforms: {
       ...commonConfig.uniforms as DrawCommon.Uniforms,
-      ...bindStructArray(COLOR_SCALE_MAX_LENGTH, 'colorScaleA'),
-      ...bindStructArray(COLOR_SCALE_MAX_LENGTH, 'colorScaleB'),
-      ...bindStructArray(SENTINEL_VALUES_MAX_LENGTH, 'sentinelValuesA'),
-      ...bindStructArray(SENTINEL_VALUES_MAX_LENGTH, 'sentinelValuesB'),
+      ...bindStructArray(SCALE_MAX_LENGTH, 'colorScaleA'),
+      ...bindStructArray(SCALE_MAX_LENGTH, 'colorScaleB'),
+      ...bindStructArray(SENTINEL_MAX_LENGTH, 'sentinelValuesA'),
+      ...bindStructArray(SENTINEL_MAX_LENGTH, 'sentinelValuesB'),
       colorScaleLengthA: (_, { colorScaleA }) => colorScaleA.length,
       colorScaleLengthB: (_, { colorScaleB }) => colorScaleB.length,
       sentinelValuesLengthA: (_, { sentinelValuesA }) => sentinelValuesA.length,
