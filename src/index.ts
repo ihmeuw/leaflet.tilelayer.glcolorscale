@@ -288,8 +288,22 @@ export default class GLColorScale extends L.GridLayer {
    * Check invariant: Either `colorScale` or `sentinelValues` must be of non-zero length.
    */
   protected _checkColorScaleAndSentinels() {
-    if (this.options.colorScale.length === 0 && this.options.sentinelValues.length === 0) {
+    const {
+      colorScale,
+      sentinelValues,
+    } = this.options;
+    if (colorScale.length === 0 && sentinelValues.length === 0) {
       throw new Error('Either `colorScale` or `sentinelValues` must be of non-zero length.');
+    }
+    if (colorScale.length > COLOR_SCALE_MAX_LENGTH) {
+      throw new Error(
+        `Color scale length ${colorScale.length} exceeds the maximum, ${COLOR_SCALE_MAX_LENGTH}.`,
+      );
+    }
+    if (sentinelValues.length > SENTINEL_VALUES_MAX_LENGTH) {
+      throw new Error(
+        `Sentinel values length ${sentinelValues.length} exceeds the maximum, ${SENTINEL_VALUES_MAX_LENGTH}.`,
+      );
     }
   }
 
