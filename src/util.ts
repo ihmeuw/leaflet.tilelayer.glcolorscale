@@ -205,3 +205,11 @@ const createNoDataTile = memoize((nodataValue: number, tileDimension: number = 2
 export function staticCast<T>(val: any): T {
   return val as T;
 }
+
+/**
+ * Add one or more macro definitions to a GLSL source string.
+ */
+export function defineMacros(src: string, macros: { [key: string]: any }): string {
+  const defs = Object.keys(macros).map((key) => `#define ${key} ${macros[key]}\n`).join();
+  return `${defs}\n${src}`;
+}
