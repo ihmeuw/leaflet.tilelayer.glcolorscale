@@ -210,6 +210,6 @@ export function staticCast<T>(val: any): T {
  * Add one or more macro definitions to a GLSL source string.
  */
 export function defineMacros(src: string, macros: { [key: string]: any }): string {
-  const defs = Object.keys(macros).map((key) => `#define ${key} ${macros[key]}\n`).join();
+  const defs = Object.keys(macros).map((key) => `#define ${key} ${macros[key]}\n`).join('');
   return `${defs}\n${src}`;
 }
