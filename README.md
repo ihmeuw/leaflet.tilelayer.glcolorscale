@@ -107,7 +107,7 @@ This TileLayer accepts all the same options as `Leaflet.GridLayer` and `Leaflet.
 | ---------------- | --------------- | --------- | ----------- |
 | url              | String          | undefined | tile URL
 | nodataValue      | Number          | undefined | pixel value to interpret as no-data
-| colorScale       | Color[]         | undefined | array of color stops used for linear interpolation
+| colorScale       | Color[]         | []        | array of color stops used for linear interpolation
 | sentinelValues   | SentinelValue[] | []        | array of fixed values to be matched exactly
 | preloadUrl       | String          | undefined | tile URL to preload in the background
 | transitions      | Boolean         | true      | whether to show pixel transitions when changing URL or color scales
@@ -128,7 +128,7 @@ const colorScale = [
 const tileLayer = new GLColorScale({ colorScale, /* ... */ });
 ```
 
-This tells the renderer to color pixels with value 0 (or less) red and value 1 (or greater) blue. Pixels with values between 0 and 1 will get a blend of red and blue, because colors are linearly interpolated between each pair of adjacent stops. You can have as few as two or as many as `GLColorScale.COLOR_SCALE_MAX_LENGTH` color stops in a color scale.
+This tells the renderer to color pixels with value 0 (or less) red and value 1 (or greater) blue. Pixels with values between 0 and 1 will get a blend of red and blue, because colors are linearly interpolated between each pair of adjacent stops. You can have as few as two or as many as `GLColorScale.SCALE_MAX_LENGTH` color stops in a color scale.
 
 ### Sentinel values
 
@@ -143,7 +143,7 @@ const sentinelValues = [
 const tileLayer = new GLColorScale({ sentinelValues, /* ... */ });
 ```
 
-Now pixels whose values are _exactly_ 0 will be colored red and pixels whose values are _exactly_ 1 will be colored blue. We haven't specified what to do for values other than 0 or 1, so the behavior for such values would be undefined in this case. Sentinel values only match the precise value specified (within a tiny margin of error). The maximum number of sentinel values the component will accept can be accessed via `GLColorScale.SENTINEL_VALUES_MAX_LENGTH`.
+Now pixels whose values are _exactly_ 0 will be colored red and pixels whose values are _exactly_ 1 will be colored blue. We haven't specified what to do for values other than 0 or 1, so the behavior for such values would be undefined in this case. Sentinel values only match the precise value specified (within a tiny margin of error). The maximum number of sentinel values the component will accept can be accessed via `GLColorScale.SENTINEL_MAX_LENGTH`.
 
 ### No-data value
 

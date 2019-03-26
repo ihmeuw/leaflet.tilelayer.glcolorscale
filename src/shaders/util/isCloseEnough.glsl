@@ -3,7 +3,7 @@
 #endif
 
 bool isCloseEnough(float a, float b) {
-  return abs(a - b) < abs(a * RELATIVE_TOLERANCE);
+  return abs(a - b) <= max(abs(a), abs(b)) * RELATIVE_TOLERANCE;
 }
 
 #pragma glslify: export(isCloseEnough)

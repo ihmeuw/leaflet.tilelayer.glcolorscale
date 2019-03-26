@@ -4,9 +4,7 @@ precision highp float;
 precision mediump float;
 #endif
 
-#define SCALE_MAX_LENGTH 16
-#define SENTINEL_MAX_LENGTH 4
-#define TRANSPARENT vec4(0.0, 0.0, 0.0, 0.0)
+#define TRANSPARENT vec4(0.0)
 
 #pragma glslify: computeColor = require(./util/computeColor.glsl)
 #pragma glslify: isCloseEnough = require(./util/isCloseEnough.glsl)
@@ -67,6 +65,7 @@ void main() {
     } else if (
       aIsNodata
       || bIsNodata
+      || colorScaleLength == 0
       || isSentinelValue(sentinelValues, sentinelValuesLength, pixelFloatValueA)
       || isSentinelValue(sentinelValues, sentinelValuesLength, pixelFloatValueB)
     ) {

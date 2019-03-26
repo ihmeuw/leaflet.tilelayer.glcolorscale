@@ -11,8 +11,8 @@ import {
 import './index.css';
 
 import {
-  COLOR_SCALE_MAX_LENGTH,
-  SENTINEL_VALUES_MAX_LENGTH,
+  SCALE_MAX_LENGTH,
+  SENTINEL_MAX_LENGTH,
 } from './constants';
 import Renderer from './Renderer';
 import {
@@ -60,7 +60,7 @@ interface EventsObject {
 export interface Options extends L.GridLayerOptions {
   url: string;
   nodataValue: number;
-  colorScale: Color[];
+  colorScale?: Color[];
   sentinelValues?: SentinelValue[];
   preloadUrl?: string;
   transitions?: boolean;
@@ -94,6 +94,7 @@ export interface Options extends L.GridLayerOptions {
 }
 
 const defaultOptions = {
+  colorScale: [],
   sentinelValues: [],
   transitions: true,
   transitionTimeMs: 800,
@@ -117,8 +118,8 @@ const defaultOptions = {
 export type InternalOptions = Options & typeof defaultOptions;
 
 export default class GLColorScale extends L.GridLayer {
-  static readonly COLOR_SCALE_MAX_LENGTH: number = COLOR_SCALE_MAX_LENGTH;
-  static readonly SENTINEL_VALUES_MAX_LENGTH: number = SENTINEL_VALUES_MAX_LENGTH;
+  static readonly SCALE_MAX_LENGTH: number = SCALE_MAX_LENGTH;
+  static readonly SENTINEL_MAX_LENGTH: number = SENTINEL_MAX_LENGTH;
   static readonly defaultOptions = defaultOptions;
 
   options: InternalOptions;
@@ -134,6 +135,8 @@ export default class GLColorScale extends L.GridLayer {
     // Merge options with defaults and invoke GridLayer's constructor,
     // which sets the merged options as `this.options`.
     super(Object.assign({}, defaultOptions, options));
+
+    this._checkColorScaleAndSentinels();
 
     const {
       nodataValue,
@@ -169,6 +172,7 @@ export default class GLColorScale extends L.GridLayer {
       sentinelValues: prevSentinelValues,
     } = this.options;
     L.Util.setOptions(this, options);
+    this._checkColorScaleAndSentinels();
     this._maybePreload(this.options.preloadUrl);
     if (this.options.url !== prevUrl) {
       this.options.transitions
@@ -246,7 +250,7 @@ export default class GLColorScale extends L.GridLayer {
   createTile(coords: TileCoordinates, done: L.DoneCallback): TileElement {
     const {
       colorScale,
-      sentinelValues = [],
+      sentinelValues,
       tileSize,
       url,
     } = this.options;
@@ -278,6 +282,29 @@ export default class GLColorScale extends L.GridLayer {
     });
 
     return tileCanvas;
+  }
+
+  /**
+   * Check invariant: Either `colorScale` or `sentinelValues` must be of non-zero length.
+   */
+  protected _checkColorScaleAndSentinels() {
+    const {
+      colorScale,
+      sentinelValues,
+    } = this.options;
+    if (colorScale.length === 0 && sentinelValues.length === 0) {
+      throw new Error('Either `colorScale` or `sentinelValues` must be of non-zero length.');
+    }
+    if (colorScale.length > SCALE_MAX_LENGTH) {
+      throw new Error(
+        `Color scale length ${colorScale.length} exceeds the maximum, ${SCALE_MAX_LENGTH}.`,
+      );
+    }
+    if (sentinelValues.length > SENTINEL_MAX_LENGTH) {
+      throw new Error(
+        `Sentinel values length ${sentinelValues.length} exceeds the maximum, ${SENTINEL_MAX_LENGTH}.`,
+      );
+    }
   }
 
   /**
