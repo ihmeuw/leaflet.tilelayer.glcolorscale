@@ -6,9 +6,10 @@ precision mediump float;
 
 #define TRANSPARENT vec4(0.0)
 
+#pragma glslify: rgbaToFloat = require(glsl-rgba-to-float)
+
 #pragma glslify: computeColor = require(./util/computeColor.glsl)
 #pragma glslify: isCloseEnough = require(./util/isCloseEnough.glsl)
-#pragma glslify: rgbaToFloat = require(./util/rgbaToFloat.glsl)
 #pragma glslify: ScaleStop = require(./util/ScaleStop.glsl)
 
 uniform ScaleStop colorScale[SCALE_MAX_LENGTH];
