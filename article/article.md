@@ -68,3 +68,15 @@ The hard part is decoding the pixels in the shader code. GLSL 1.00, the shader l
 
 Once a pixel's float value is decoded in the shader, it's pretty easy to [colorize it by applying a linear color scale](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/util/computeColor.glsl). GLSL even provides a built-in function, `mix`, to do the linear interpolation. So convenient!
 
+## Problem 2: Getting raw pixel data to the client
+
+Once I had a working prototype of the WebGL renderer, I turned my attention server-side to figure out how we would pass the floating-point pixel data to the client. The source of this data was our PostGIS database. PostGIS extends the popular [PostgreSQL](https://www.postgresql.org/) [RDBMS](https://en.wikipedia.org/wiki/Relational_database#RDBMS) with geospatial capabilities. It defines a `raster` type for pixel data, and there are a few different [output formats](https://postgis.net/docs/RT_reference.html#Raster_Outputs) available:
+- "Well-Known Binary" (WKB) - essentially the same binary representation PostGIS uses internally
+- GeoTIFF - geospatial extension of the common TIFF format
+- JPEG
+- PNG
+
+Of these choices, JPEG and PNG were unacceptable, because as implemented by PostGIS, they don't support floating-point pixels. JPEG is also a lossy format, and we didn't want to lose any data. GeoTIFF would work, because it's lossless and supports floating-point pixels, but the format is rather complicated, and I suspected it wouldn't be trivial to parse. Ultimately I opted for WKB, because its definition was simpler and I figured it would be faster for PostGIS to produce, because no format conversion would be needed. I couldn't find any existing tools for parsing this format, but the [definition](https://github.com/postgis/postgis/blob/svn-trunk/raster/doc/RFC2-WellKnownBinaryFormat) was pretty straightforward, so it wasn't too difficult to write my own [parser](https://github.com/ihmeuw/wkb-raster).
+
+With the floating-point pixel data extracted from PostGIS, I just needed a way to get it to the client. There were many possibilities for the interchange format, but I chose PNG, primarily because it seemed to be the most common format for raster data on map tile servers. Ordinarily, PNGs treat pixels as RGB or RGBA color channels, but I took inspiration from a common approach to creating [Digital Elevation Model (DEM)](https://en.wikipedia.org/wiki/Digital_elevation_model) tiles, whereby values that don't represent colors are encoded into the RGBA channels (or more abstractly the 32 bits) of each pixel. Our PNG tiles would be a bit different from DEM tiles, because we needed to encode 32-floats, whereas DEM PNGs typically encode 32-bit integers. Still, the basic idea is the same - using the 32 bits available for each pixel to encode some value that doesn't represent a color. One bonus to using PNG is that the format provides lossless compression. The compression scheme is designed for RGB(A), so it doesn't work as well for compressing floats, but it's still better than no compression.
+
