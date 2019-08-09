@@ -80,3 +80,21 @@ Of these choices, JPEG and PNG were unacceptable, because as implemented by Post
 
 With the floating-point pixel data extracted from PostGIS, I just needed a way to get it to the client. There were many possibilities for the interchange format, but I chose PNG, primarily because it seemed to be the most common format for raster data on map tile servers. Ordinarily, PNGs treat pixels as RGB or RGBA color channels, but I took inspiration from a common approach to creating [Digital Elevation Model (DEM)](https://en.wikipedia.org/wiki/Digital_elevation_model) tiles, whereby values that don't represent colors are encoded into the RGBA channels (or more abstractly the 32 bits) of each pixel. Our PNG tiles would be a bit different from DEM tiles, because we needed to encode 32-floats, whereas DEM PNGs typically encode 32-bit integers. Still, the basic idea is the same - using the 32 bits available for each pixel to encode some value that doesn't represent a color. Astute readers should also recognize this as the same approach we used for encoding floats in a WebGL texture. One bonus to using PNG is that the format provides lossless compression. The compression scheme is designed for RGB(A), so it doesn't work as well for compressing floats, but it's still better than no compression.
 
+## Problem 3: Integrating with Leaflet
+
+By this point, I had a working prototype spanning the full stack. To summarize the process:
+- server:
+  - query PostGIS for floating-point raster data
+  - parse the result, extracting the raw pixels
+  - pack the pixels into a PNG tile and send to the client
+- client:
+  - extract the pixels from the PNG
+  - pass them to WebGL via a texture
+  - decode and colorize each pixel in the shader
+
+To go from this prototype to a full implementation that would work in our mapping application, one major hurdle remained: integrating the WebGL rendering into Leaflet.
+
+Leaflet is a popular and flexible JavaScript mapping framework, and one of its greatest strengths is its extensibility. The built-in [TileLayer component](https://leafletjs.com/reference.html#tilelayer) is the standard way of displaying raster tiles in Leaflet. We had already written a custom component extending this tile layer for our prior implementation using Carto. I figured we could do something similar for the new implementation using WebGL, but many questions remained to be answered.
+
+To figure out how best to do this, I spent some time examining the interals of both `TileLayer` and `GridLayer` (which the former extends).
+
