@@ -66,3 +66,5 @@ gl.texImage2D(
 
 The hard part is decoding the pixels in the shader code. GLSL 1.00, the shader language used in WebGL 1.0, doesn't even provide any bitwise operators, so one has to resort to ordinary arithmetic for parsing the binary data. My general approach was to decompose the four 8-bit integers representing the RGBA channels into an array of 32 bits, then compute the floating point value from these raw bits. With frequent references to the [IEEE Standard for Floating-Point Arithmetic (IEEE 754)](https://en.wikipedia.org/wiki/IEEE_754), some trial and error (few tools exist for debugging shader code), and a lot of perseverance, I finally succeeded. If you're curious, you can see my solution [here](https://github.com/ihmeuw/glsl-rgba-to-float/blob/master/index.glsl).
 
+Once a pixel's float value is decoded in the shader, it's pretty easy to [colorize it by applying a linear color scale](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/util/computeColor.glsl). GLSL even provides a built-in function, `mix`, to do the linear interpolation. So convenient!
+
