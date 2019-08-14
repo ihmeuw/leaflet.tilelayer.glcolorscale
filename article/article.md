@@ -141,3 +141,11 @@ gl_FragColor = mix(colorA, colorB, interpolationFraction);
 
 Note that I've simplified the shader code here for the purpose of highlighting the basic concepts. For curious readers, here are the actual implementations for [interpolating by value](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/interpolateValue.frag.glsl) and [interpolating by color](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/interpolateColor.frag.glsl).
 
+## Outcome
+
+The new approach to fetching and rendering map tiles in the LBD application yielded encouraging results in terms of performance and usability. Tile requests now complete much faster - generally in less than a second, compared with 3+ seconds in the prior implementation. This makes using the tool in geospatial (i.e. raster) mode a smoother experience, eliminating the frustration of having to wait a long time for map tiles to load. Seeing pixel values on mouse hover allows users immediate and continuous access to the estimates being visualized. And animated per-pixel transitions make the changes between one view and another easier to perceive, particularly helpful for visualizing changes over time.
+
+After implementing this solution in the LBD application, I extracted and published the major components as open-source software:
+- JavaScript parser for the PostGIS WKB raster type: [wkb-raster](https://github.com/ihmeuw/wkb-raster)
+- GLSL shader function for parsing 32-bit floats from RGBA vectors: [glsl-rgba-to-float](https://github.com/ihmeuw/glsl-rgba-to-float)
+- Leaflet tile layer: [Leaflet.TileLayer.GLColorScale](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale)
