@@ -102,7 +102,7 @@ const pixelValue = tileDataView.getFloat32(byteIndex, littleEndian);
 
 Second, I wanted to animate transitions (per pixel) when the user switched the view to load a new set of tiles. In addition to being a nice visual treat, I thought these transitions could be useful in the Local Burden of Disease visualization for illuminating changes over time. In particular, we typically provide a "play" control that allows users to view data for a series of years in a timed sequence. I found it difficult to perceive the magnitude of changes from year to year when viewing a sequence of static images, which was how we had originally implemented the play feature. I suspected, though, that animated transitions would help draw the eye to areas where more dramatic changes were occurring.
 
-[add animated GIFs?]
+![under-5 mortality 2000-2015 animation](./under5_mortality_animated.gif)
 
 To implement these transitions, I'd need to modify the WebGL renderer. Specifically, two textures would need to be loaded during transitions - one containing the old tiles and one containing the new. The shader code would need to compute the values of pixels in both the old and new tiles and interpolate between them over time. There were multiple cases to account for, because it was possible to (1) change the tiles but keep the colorization rules the same, and (2) change the tiles and the colorization rules. A third option would be to keep the same tiles but change the colorization rules. Since this wasn't possible in the Local Burden of Disease application, though, I decided to defer implementing it until it was actually needed.
 
