@@ -102,3 +102,65 @@ For optimal performance in OpenGL, you typically want to render as much as possi
 
 Creating a new WebGL context for each new `canvas` added to the DOM seemed too expensive, so I opted instead to create a single offscreen `canvas` used exclusively for WebGL rendering. Each tile would be rendered to this offscreen `canvas` on demand, then the rendered pixels would be copied to a new `canvas` that `GridLayer` would attach to the map. It's not an ideal solution, because when many tiles need to be rendered, many pixels must be copied from the rendering `canvas` to the onscreen `canvas`es, but it seemed the best option available given the design of `GridLayer`.
 
+## Flourishes
+
+By now, the main work was complete, but there were a few more nice-to-have features I was keen to add. First, I wanted to make the floating-point value of the pixel under the cursor available to user-defined mouse events. Since the parent class, `GridLayer`, maintains a cache of the tiles visible onscreen, doing so was fairly trivial. I could use the cursor's screen position to determine (1) which tile was under the cursor and (2) the cursor's pixel coordinates within the tile. From there, the float value could be obtained from the binary pixel data with a JavaScript `DataView`:
+
+```typescript
+// create a DataView for obtaining a value from the binary pixel data
+const tileDataView = new DataView(pixelData.buffer);
+
+// To find the byte index:
+// (1) get the index of the start of the row in which the pixel is located
+//     (row index * number of columns)
+// (2) add to that the column index
+// (3) multiply by the number of bytes used for each pixel (4)
+const byteIndex = (coordsInTile.y * tileSize + coordsInTile.x) * BYTES_PER_WORD;
+
+// use the byte index and the machine's endianness to obtain the pixel value
+const pixelValue = tileDataView.getFloat32(byteIndex, littleEndian);
+```
+
+Second, I wanted to animate transitions (per pixel) when the user switched the view to load a new set of tiles. In addition providing a nice visual treat, I thought these transitions could be useful in the Local Burden of Disease visualization for illuminating changes over time. In particular, we typically provide a "play" control that allows users to view data for a series of years in a timed sequence. I found it difficult to perceive the magnitude of changes from year to year when viewing a sequence of static images, which was how we had originally implemented the play feature. I suspected, though, that animated transitions would help draw the eye to areas where more dramatic changes were occurring.
+
+[add animated GIFs?]
+
+To implement these transitions, I'd need to modify the WebGL renderer. Specifically, two textures would need to be loaded during transitions - one containing the old tiles and one containing the new. The shader code would need to compute the values of pixels in both the old and new tiles and interpolate between them over time. There were multiple cases to account for, because it was possible to (1) change the tiles but keep the colorization rules the same (2) change the tiles and the colorization rules. A third option would be to keep the same tiles but change the colorization rules. Since this wasn't possible in the Local Burden of Disease application, though, I decided to defer implementing it until it was actually needed.
+
+When changing the tiles but maintaining the colorization rules, we could interpolate between the floating-point values of each pixel in the old and new tiles, then compute the color of the interpolated value.
+
+```glsl
+// retrieve and decode pixel value from the old tile
+vec4 rgbaFloatsA = texture2D(textureA, vTexCoordA);
+float pixelFloatValueA = rgbaToFloat(rgbaFloatsA, littleEndian);
+
+// retrieve and decode pixel value from the new tile
+vec4 rgbaFloatsB = texture2D(textureB, vTexCoordB);
+float pixelFloatValueB = rgbaToFloat(rgbaFloatsB, littleEndian);
+
+// interpolate
+float interpolated = mix(pixelFloatValueA, pixelFloatValueB, interpolationFraction);
+
+// compute the color of the interpolated value
+gl_FragColor = computeColor(interpolated, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
+```
+
+This would mean each pixel would transition along the linear gradient(s) defined for the color scale.
+
+When changing both tiles and colorization rules, though, this approach wouldn't work, because old and new tiles needed to be colorized according to different rules. In this case, we'd need to compute the color of each pixel in the old tiles and each pixel in the new tiles and then interpolate (in RGB color space) between the _colors_.
+
+```glsl
+// ... obtain old and new pixel values as before
+
+// compute the color of the old pixel
+vec4 colorA = computeColor(pixelFloatValueA, colorScaleA, sentinelValuesA, colorScaleLengthA, sentinelValuesLengthA);
+
+// compute the color of the new pixel
+vec4 colorB = computeColor(pixelFloatValueB, colorScaleB, sentinelValuesB, colorScaleLengthB, sentinelValuesLengthB);
+
+// interpolate between the colors
+gl_FragColor = mix(colorA, colorB, interpolationFraction);
+```
+
+Note that I've simplified the shader code here for the purpose of highlighting the basic concepts. For curious readers, here are the actual implementations for [interpolating by value](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/interpolateValue.frag.glsl) and [interpolating by color](https://github.com/ihmeuw/leaflet.tilelayer.glcolorscale/blob/master/src/shaders/interpolateColor.frag.glsl).
+
