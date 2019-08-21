@@ -102,6 +102,8 @@ const byteIndex = (coordsInTile.y * tileSize + coordsInTile.x) * BYTES_PER_WORD;
 const pixelValue = tileDataView.getFloat32(byteIndex, littleEndian);
 ```
 
+![pixel hover animation](./pixel_hover_animated.gif)
+
 Second, I wanted to animate transitions (per pixel) when the user switched the view to load a new set of tiles. In addition to being a nice visual treat, I thought these transitions could be useful in the Local Burden of Disease visualization for illuminating changes over time. In particular, we typically provide a "play" control that allows users to view data for a series of years in a timed sequence. I found it difficult to perceive the magnitude of changes from year to year when viewing a sequence of static images, which was how we had originally implemented the play feature. I suspected, though, that animated transitions would help draw the eye to areas where more dramatic changes were occurring.
 
 ![under-5 mortality 2000-2015 animation](./under5_mortality_animated.gif)
