@@ -4,7 +4,7 @@ by David Schneider, Sofware Engineer at IHME
 
 For [IHME](http://www.healthdata.org/)'s [Local Burden of Disease](http://www.healthdata.org/lbd) project we produce raster datasets showing the geographical distribution of diseases, medical interventions, and other measures. Each pixel represents our researchers' best estimate of the value of a given measure, expressed as a floating-point number, for an area representing roughly a 5km by 5km square. To visualize these data points, we colorize pixels using linear color scales, translating each floating-point value to a color via linear interpolation. Here, for example, is a pixel map representing vaccine coverage in Africa. Looking at the legend in the lower right corner, you can see that data values ranging from 0.0 to 100.0 are mapped to colors ranging from red-orange to blue, with some other colors in between.
 
-![vaccine coverage pixel map](./vaccine_coverage.png)
+![vaccine coverage pixel map](./vaccine_coverage.png) *Institute for Health Metrics and Evaluation (IHME). Local Burden of Disease – Vaccines. Seattle, WA: IHME, University of Washington, 2019. Available from http://vizhub.healthdata.org/lbd/vaccines (Accessed 8 August, 2019)*
 
 Rendering this pixel data efficiently in our [web visualization tool](https://vizhub.healthdata.org/lbd) (shown above) proved to be an interesting problem. This article describes the challenges we faced and how we addressed them.
 
@@ -102,11 +102,11 @@ const byteIndex = (coordsInTile.y * tileSize + coordsInTile.x) * BYTES_PER_WORD;
 const pixelValue = tileDataView.getFloat32(byteIndex, littleEndian);
 ```
 
-![pixel hover animation](./pixel_hover_animated.gif)
+![pixel hover animation](./pixel_hover_animated.gif) *Institute for Health Metrics and Evaluation (IHME). Local Burden of Disease – Under-5 mortality. Seattle, WA: IHME, University of Washington, 2017. Available from http://vizhub.healthdata.org/lbd/under5. (Accessed 21 August, 2019)*
 
 Second, I wanted to animate transitions (per pixel) when the user switched the view to load a new set of tiles. In addition to being a nice visual treat, I thought these transitions could be useful in the Local Burden of Disease visualization for illuminating changes over time. In particular, we typically provide a "play" control that allows users to view data for a series of years in a timed sequence. I found it difficult to perceive the magnitude of changes from year to year when viewing a sequence of static images, which was how we had originally implemented the play feature. I suspected, though, that animated transitions would help draw the eye to areas where more dramatic changes were occurring.
 
-![under-5 mortality 2000-2015 animation](./under5_mortality_animated.gif)
+![under-5 mortality 2000-2015 animation](./under5_mortality_animated.gif) *Institute for Health Metrics and Evaluation (IHME). Local Burden of Disease – Under-5 mortality. Seattle, WA: IHME, University of Washington, 2017. Available from http://vizhub.healthdata.org/lbd/under5. (Accessed 14 August, 2019)*
 
 To implement these transitions, I'd need to modify the WebGL renderer. Specifically, two textures would need to be loaded during transitions - one containing the old tiles and one containing the new. The shader code would need to compute the values of pixels in both the old and new tiles and interpolate between them over time. There were multiple cases to account for, because it was possible to (1) change the tiles but keep the colorization rules the same, and (2) change the tiles and the colorization rules. A third option would be to keep the same tiles but change the colorization rules, but since this wasn't possible in the Local Burden of Disease application, I decided to defer implementing it until it was actually needed.
 
