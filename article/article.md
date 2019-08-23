@@ -125,7 +125,13 @@ float pixelFloatValueB = rgbaToFloat(rgbaFloatsB, littleEndian);
 float interpolated = mix(pixelFloatValueA, pixelFloatValueB, interpolationFraction);
 
 // compute the color of the interpolated value
-gl_FragColor = computeColor(interpolated, colorScale, sentinelValues, colorScaleLength, sentinelValuesLength);
+gl_FragColor = computeColor(
+  interpolated,
+  colorScale,
+  sentinelValues,
+  colorScaleLength,
+  sentinelValuesLength
+);
 ```
 
 When changing both tiles and colorization rules, though, this approach wouldn't work, because old and new tiles needed to be colorized according to different rules. In this case, we would need to compute the color of each pixel in the old tiles and each pixel in the new tiles and then interpolate (in RGB color space) between the _colors_.
@@ -134,10 +140,22 @@ When changing both tiles and colorization rules, though, this approach wouldn't 
 // ... obtain old and new pixel values as before
 
 // compute the color of the old pixel
-vec4 colorA = computeColor(pixelFloatValueA, colorScaleA, sentinelValuesA, colorScaleLengthA, sentinelValuesLengthA);
+vec4 colorA = computeColor(
+  pixelFloatValueA,
+  colorScaleA,
+  sentinelValuesA,
+  colorScaleLengthA,
+  sentinelValuesLengthA
+);
 
 // compute the color of the new pixel
-vec4 colorB = computeColor(pixelFloatValueB, colorScaleB, sentinelValuesB, colorScaleLengthB, sentinelValuesLengthB);
+vec4 colorB = computeColor(
+  pixelFloatValueB,
+  colorScaleB,
+  sentinelValuesB,
+  colorScaleLengthB,
+  sentinelValuesLengthB
+);
 
 // interpolate between the colors
 gl_FragColor = mix(colorA, colorB, interpolationFraction);
