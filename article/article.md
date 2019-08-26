@@ -87,7 +87,7 @@ Creating a new WebGL context for each new `canvas` added to the DOM seemed too e
 
 By now, the main work was complete, but there were a few more nice-to-have features I was keen to add. First, I wanted to make the floating-point value of the pixel under the cursor available to user-defined mouse events. Since the parent class, `GridLayer`, maintains a cache of the tiles visible onscreen, doing so was pretty easy. I could use the cursor's screen position to determine (1) which tile was under the cursor and (2) the cursor's pixel coordinates within the tile. From there, the float value could be obtained from the binary pixel data with a JavaScript `DataView`:
 
-```typescript
+```javascript
 // create a DataView for obtaining a value from the binary pixel data
 const tileDataView = new DataView(pixelData.buffer);
 
